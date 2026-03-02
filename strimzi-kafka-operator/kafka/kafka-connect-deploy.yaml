@@ -1,0 +1,43 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnect
+metadata:
+  name: kafka-connect
+#  annotations:
+#  # use-connector-resources configures this KafkaConnect
+#  # to use KafkaConnector resources to avoid
+#  # needing to call the Connect REST API directly
+   strimzi.io/use-connector-resources: "true"
+spec:
+  version: 4.1.1
+  replicas: 1
+  bootstrapServers: my-cluster-1-kafka-bootstrap:9093
+  groupId: my-connect-group
+  configStorageTopic: my-connect-configs
+  statusStorageTopic: my-connect-status
+  offsetStorageTopic: my-connect-offsets
+  tls:
+    trustedCertificates:
+      - secretName: my-cluster-cluster-ca-cert
+        pattern: "*.crt"
+  template:
+    pod:
+      volumes:
+        - name: gcs-credentials
+          secret:
+            secretName: gcs-credentials
+
+      volumeMounts:
+        - name: gcs-credentials
+          mountPath: /opt/kafka/external-configuration/gcs
+          readOnly: true
+  config:
+    # -1 means it will use the default replication factor configured in the broker    
+    config.providers: file
+    config.storage.replication.factor: -1
+    offset.storage.replication.factor: -1
+    status.storage.replication.factor: -1
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: "false"
+    value.converter.schemas.enable: "false"
+    config.providers.file.class: org.apache.kafka.common.config.provider.FileConfigProvider

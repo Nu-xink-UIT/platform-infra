@@ -1,0 +1,96 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnect
+metadata:
+  name: kafka-connect
+  annotations:
+#  # use-connector-resources configures this KafkaConnect
+#  # to use KafkaConnector resources to avoid
+#  # needing to call the Connect REST API directly
+    strimzi.io/use-connector-resources: "true"
+spec:
+  version: 4.1.1
+  replicas: 1
+  bootstrapServers: my-cluster-1-kafka-bootstrap:9093
+  groupId: my-connect-group
+  configStorageTopic: my-connect-configs
+  statusStorageTopic: my-connect-status
+  offsetStorageTopic: my-connect-offsets
+  tls:
+    trustedCertificates:
+      - secretName: my-cluster-1-cluster-ca-cert
+        pattern: "*.crt"
+  config:
+    # -1 means it will use the default replication factor configured in the broker    
+    config.providers: file
+    config.storage.replication.factor: -1
+    offset.storage.replication.factor: -1
+    status.storage.replication.factor: -1
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: "false"
+    value.converter.schemas.enable: "false"
+    config.providers.file.class: org.apache.kafka.common.config.provider.FileConfigProvider
+    # config.providers.env.class: io.strimzi.kafka.EnvVarConfigProvider
+  template:
+    pod:
+      imagePullSecrets:
+        - name: ghcr-secret
+      volumes:
+        - name: gcs-credentials
+          secret:
+            secretName: gcs-credentials
+  externalConfiguration: 
+    volumes:
+      - name: gcs-credentials
+        secret:
+          secretName: gcs-credentials
+  # containers:
+  #   volumeMounts:
+  #     name: gcs-credentials
+  build:
+
+    # mavenRepositories:
+    #   - name: confluent
+    #     url: https://packages.confluent.io/maven/
+    output:
+      type: docker
+      # This image will last only for 24 hours and might be overwritten by other users
+      # Strimzi will use this tag to push the image. But it will use the digest to pull
+      # the container image to make sure it pulls exactly the image we just built. So
+      # it should not happen that you pull someone else's container image. However, we
+      # recommend changing this to your own container registry or using a different
+      # image name for any other than demo purposes.
+      image: ghcr.io/tuyetminh14/strimzi-connect-gcs:4.1.1
+      pushSecret: ghcr-secret  
+      
+    plugins:
+      - name: kafka-connect-avro
+        artifacts:
+          - type: maven
+            repository: https://packages.confluent.io/maven/
+            group: io.confluent
+            artifact: kafka-connect-avro-converter
+            version: 8.1.1
+
+      - name: kafka-connect-gcs
+        artifacts:
+          - type: zip
+            url: https://github.com/Aiven-Open/cloud-storage-connectors-for-apache-kafka/releases/download/v3.4.2/gcs-sink-connector-for-apache-kafka-3.4.2.zip
+
+      - name: kafka-connect-clickhouse
+        artifacts:
+          - type: zip
+            url: https://github.com/ClickHouse/clickhouse-kafka-connect/releases/download/v1.3.5/clickhouse-kafka-connect-v1.3.5.zip
+
+        # artifacts:
+        #   - type: maven
+        #     group: com.vishwakraft.clickhouse
+        #     artifact: clickhouse-kafka-sink-connector
+        #     version: 1.0.1
+      
+      - name: debezium-core
+        artifacts:
+          - type: maven
+            group: io.debezium
+            artifact: debezium-core
+            version: 3.4.1.Final

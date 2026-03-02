@@ -1,0 +1,37 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: gcs-public-sink-connector-test-6
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: kafka-connect
+spec:
+  class: io.aiven.kafka.connect.gcs.GcsSinkConnector
+  tasksMax: 1
+  autoRestart:
+    enabled: true
+  config:
+    file.name.template: >-
+      kafka/{{topic}}/year={{timestamp:unit=yyyy}}/month={{timestamp:unit=MM}}/day={{timestamp:unit=dd}}/{{partition:padding=true}}-{{start_offset:padding=true}}.parquet
+    file.name.timestamp.timezone: Asia/Ho_Chi_Minh
+    format.output.envelope: false
+    format.output.fields: value
+    format.output.type: parquet
+    gcs.bucket.name: production-dp
+    gcs.credentials.path: /opt/kafka/external-configuration/gcs-credentials/gcs-key.json
+    key.converter: org.apache.kafka.connect.storage.StringConverter
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter.schemas.enable: true  
+    topics: test-topic3
+    transforms: "ProcessingTime, FormatTime"
+    transforms.ProcessingTime.timestamp.field: processing_time
+    transforms.ProcessingTime.type: org.apache.kafka.connect.transforms.InsertField$Value
+    transforms.FormatTime.field: processing_time
+    transforms.FormatTime.type: org.apache.kafka.connect.transforms.TimestampConverter$Value
+    transforms.FormatTime.target.type: unix
+    transforms.FormatTime.unix.precision: microseconds
+    errors.tolerance: all
+    errors.log.enable: true
+    # errors.deadletterqueue.topic.name: servicedesk-dlq
+    errors.deadletterqueue.context.headers.enable: true
+    file.max.records: 1
