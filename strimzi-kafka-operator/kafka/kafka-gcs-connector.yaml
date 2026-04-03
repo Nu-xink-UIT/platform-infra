@@ -7,7 +7,7 @@ metadata:
     strimzi.io/cluster: kafka-connect
 spec:
   class: io.aiven.kafka.connect.gcs.GcsSinkConnector
-  tasksMax: 1
+  tasksMax: 4
   autoRestart:
     enabled: true
   config:
@@ -21,8 +21,8 @@ spec:
     gcs.credentials.path: /opt/kafka/external-configuration/gcs-credentials/gcs-key.json
     key.converter: org.apache.kafka.connect.storage.StringConverter
     value.converter: org.apache.kafka.connect.json.JsonConverter
-    value.converter.schemas.enable: true  
-    topics: test-topic3
+    value.converter.schemas.enable: true
+    topics: binance.raw, vcb_exchange_rates, goldprice.rates.raw
     transforms: "ProcessingTime, FormatTime"
     transforms.ProcessingTime.timestamp.field: processing_time
     transforms.ProcessingTime.type: org.apache.kafka.connect.transforms.InsertField$Value
@@ -34,4 +34,6 @@ spec:
     errors.log.enable: true
     # errors.deadletterqueue.topic.name: servicedesk-dlq
     errors.deadletterqueue.context.headers.enable: true
-    file.max.records: 1
+    #file.max.records: 1
+    kafka.flush.messages: 100000
+    kafka.flush.timeout.ms: 300000
