@@ -1,7 +1,7 @@
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnector
 metadata:
-  name: gcs-public-sink-connector-test-6
+  name: gcs-raw-sink-connector
   namespace: kafka
   labels:
     strimzi.io/cluster: kafka-connect
@@ -20,9 +20,10 @@ spec:
     gcs.bucket.name: production-dp
     gcs.credentials.path: /opt/kafka/external-configuration/gcs-credentials/gcs-key.json
     key.converter: org.apache.kafka.connect.storage.StringConverter
+    key.converter.schemas.enable: false
     value.converter: org.apache.kafka.connect.json.JsonConverter
     value.converter.schemas.enable: true
-    topics: binance.raw, vcb_exchange_rates, goldprice.rates.raw
+    topics: binance.raw, vcb_exchange_rates, goldprice.rates.raw, goldprice.raw, sjc.raw
     transforms: "ProcessingTime, FormatTime"
     transforms.ProcessingTime.timestamp.field: processing_time
     transforms.ProcessingTime.type: org.apache.kafka.connect.transforms.InsertField$Value
@@ -35,5 +36,5 @@ spec:
     # errors.deadletterqueue.topic.name: servicedesk-dlq
     errors.deadletterqueue.context.headers.enable: true
     #file.max.records: 1
-    kafka.flush.messages: 100000
-    kafka.flush.timeout.ms: 300000
+    kafka.flush.messages: 10
+    kafka.flush.timeout.ms: 5000
