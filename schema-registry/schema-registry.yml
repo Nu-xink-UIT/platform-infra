@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: schema-registry
-        image: bitnami/schema-registry:8.1.0
+        image: bitnami/schema-registry:7.6.0
         ports:
         - containerPort: 8081
         env:
