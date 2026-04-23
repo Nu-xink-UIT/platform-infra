@@ -10,7 +10,7 @@ metadata:
 spec:
   version: 4.1.1
   replicas: 1
-  bootstrapServers: my-cluster-1-kafka-bootstrap:9093
+  bootstrapServers: kafka-cluster-kafka-bootstrap:9093
   groupId: my-connect-group
   configStorageTopic: my-connect-configs
   statusStorageTopic: my-connect-status
@@ -20,7 +20,7 @@ spec:
       - secretName: my-cluster-1-cluster-ca-cert
         pattern: "*.crt"
   config:
-    # -1 means it will use the default replication factor configured in the broker    
+    # -1 means it will use the default replication factor configured in the broker
     config.providers: file
     config.storage.replication.factor: -1
     offset.storage.replication.factor: -1
@@ -39,7 +39,7 @@ spec:
         - name: gcs-credentials
           secret:
             secretName: gcs-credentials
-  externalConfiguration: 
+  externalConfiguration:
     volumes:
       - name: gcs-credentials
         secret:
@@ -61,8 +61,8 @@ spec:
       # recommend changing this to your own container registry or using a different
       # image name for any other than demo purposes.
       image: ghcr.io/tuyetminh14/strimzi-connect-gcs:4.1.1
-      pushSecret: ghcr-secret  
-      
+      pushSecret: ghcr-secret
+
     plugins:
       - name: kafka-connect-avro
         artifacts:
@@ -87,7 +87,7 @@ spec:
         #     group: com.vishwakraft.clickhouse
         #     artifact: clickhouse-kafka-sink-connector
         #     version: 1.0.1
-      
+
       - name: debezium-core
         artifacts:
           - type: maven
