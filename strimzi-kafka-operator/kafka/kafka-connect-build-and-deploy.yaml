@@ -17,7 +17,7 @@ spec:
   offsetStorageTopic: my-connect-offsets
   tls:
     trustedCertificates:
-      - secretName: my-cluster-1-cluster-ca-cert
+      - secretName: kafka-cluster-cluster-ca-cert
         pattern: "*.crt"
   config:
     # -1 means it will use the default replication factor configured in the broker
@@ -60,8 +60,8 @@ spec:
       # it should not happen that you pull someone else's container image. However, we
       # recommend changing this to your own container registry or using a different
       # image name for any other than demo purposes.
-      image: ghcr.io/tuyetminh14/strimzi-connect-gcs:4.1.1
-      pushSecret: ghcr-secret
+      image: ghcr.io/nu-xink-uit/platform-infra/strimzi-connect-gcs:4.1.1
+      pushSecret: github-registry-secret
 
     plugins:
       - name: kafka-connect-avro
