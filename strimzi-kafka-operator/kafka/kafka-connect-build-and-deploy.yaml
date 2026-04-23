@@ -34,7 +34,7 @@ spec:
   template:
     pod:
       imagePullSecrets:
-        - name: ghcr-secret
+        - name: github-registry-secret
       volumes:
         - name: gcs-credentials
           secret:
