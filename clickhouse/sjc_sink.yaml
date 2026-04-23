@@ -5,33 +5,33 @@ metadata:
   labels:
     strimzi.io/cluster: kafka-connect
 
-  spec:
-    class: com.clickhouse.kafka.connect.ClickHouseSinkConnector
-    tasksMax: 1
-    config:
-      topics: sjc.raw
-      clickhouse.host: "chi-clickhouse-installation-goldprice-0-0"
-      clickhouse.port: 8123
-      clickhouse.user: "admin"
-      clickhouse.password: "goldprice_2026"
-      clickhouse.database: "raw"
-      clickhouse.table: "sjc_raw"
+spec:
+  class: com.clickhouse.kafka.connect.ClickHouseSinkConnector
+  tasksMax: 1
+  config:
+    topics: sjc.raw
+    clickhouse.host: "chi-clickhouse-installation-goldprice-0-0"
+    clickhouse.port: 8123
+    clickhouse.user: "admin"
+    clickhouse.password: "goldprice_2026"
+    clickhouse.database: "raw"
+    clickhouse.table: "sjc_raw"
 
-      # Converter config
-      value.converter: "org.apache.kafka.connect.json.JsonConverter"
-      value.converter.schemas.enable: "false"
+    # Converter config
+    value.converter: "org.apache.kafka.connect.json.JsonConverter"
+    value.converter.schemas.enable: "false"
 
-      # SMTs config
-      transforms: "InsertMetadata"
+    # SMTs config
+    transforms: "InsertMetadata"
 
-      # automatically add offset for deduplicate checking
-      transforms.InsertMetadata.type: "org.apache.kafka.connect.transforms.InsertField$Value"
-      transforms.InsertMetadata.offset.field: "_offset"
-      transforms.InsertMetadata.partition.field: "_partition"
+    # automatically add offset for deduplicate checking
+    transforms.InsertMetadata.type: "org.apache.kafka.connect.transforms.InsertField$Value"
+    transforms.InsertMetadata.offset.field: "_offset"
+    transforms.InsertMetadata.partition.field: "_partition"
 
-      # can have some type forcing here (if needed)
+    # can have some type forcing here (if needed)
 
-      # error policy
-      errors.tolerance: "all"
-      errors.log.enable: "true"
-      errors.log.include.messages: "true"
+    # error policy
+    errors.tolerance: "all"
+    errors.log.enable: "true"
+    errors.log.include.messages: "true"
