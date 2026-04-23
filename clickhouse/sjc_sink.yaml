@@ -10,12 +10,12 @@ spec:
   tasksMax: 1
   config:
     topics: sjc.raw
-    clickhouse.host: "chi-clickhouse-installation-goldprice-0-0"
-    clickhouse.port: 8123
-    clickhouse.user: "admin"
-    clickhouse.password: "goldprice_2026"
-    clickhouse.database: "raw"
-    clickhouse.table: "sjc_raw"
+    hostname: "chi-clickhouse-installation-goldprice-0-0"
+    port: 8123
+    username: "admin"
+    password: "goldprice_2026"
+    database: "raw"
+    table: "sjc_raw"
 
     # Converter config
     value.converter: "org.apache.kafka.connect.json.JsonConverter"
