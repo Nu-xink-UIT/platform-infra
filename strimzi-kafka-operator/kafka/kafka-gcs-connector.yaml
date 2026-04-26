@@ -32,13 +32,13 @@ spec:
 
     topics: binance.raw, vcb_exchange_rates, goldprice.rates.raw, goldprice.raw, sjc.raw
 
-    transforms: "ProcessingTime, FormatTime"
-    transforms.ProcessingTime.timestamp.field: processing_time
-    transforms.ProcessingTime.type: org.apache.kafka.connect.transforms.InsertField$Value
-    transforms.FormatTime.field: processing_time
-    transforms.FormatTime.type: org.apache.kafka.connect.transforms.TimestampConverter$Value
-    transforms.FormatTime.target.type: unix
-    transforms.FormatTime.unix.precision: microseconds
+    # transforms: "ProcessingTime, FormatTime"
+    # transforms.ProcessingTime.timestamp.field: processing_time
+    # transforms.ProcessingTime.type: org.apache.kafka.connect.transforms.InsertField$Value
+    # transforms.FormatTime.field: processing_time
+    # transforms.FormatTime.type: org.apache.kafka.connect.transforms.TimestampConverter$Value
+    # transforms.FormatTime.target.type: unix
+    # transforms.FormatTime.unix.precision: microseconds
 
     errors.tolerance: all
     errors.log.enable: true
