@@ -27,7 +27,7 @@ spec:
     key.converter.schemas.enable: false
 
 
-    value.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter: org.apache.kafka.connect.storage.StringConverter
     value.converter.schemas.enable: false
 
     topics: binance.raw, vcb_exchange_rates, goldprice.rates.raw, goldprice.raw, sjc.raw
