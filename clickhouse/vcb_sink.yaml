@@ -2,7 +2,7 @@
 apiVersion: kafka.strimzi.io/v1
 kind: KafkaConnector
 metadata:
-  name: sjc-clickhouse-connector
+  name: vcb-clickhouse-connector
   labels:
     strimzi.io/cluster: kafka-connect
 
@@ -10,7 +10,7 @@ spec:
   class: com.clickhouse.kafka.connect.ClickHouseSinkConnector
   tasksMax: 1
   config:
-    topics: "sjc.raw"
+    topics: "vcb_exchange_rates"
     hostname: "chi-clickhouse-installation-goldprice-0-0.clickhouse.svc.cluster.local"
     port: "8123"
     username: "admin"
@@ -19,8 +19,8 @@ spec:
     ssl: "false"
     auto.offset.reset: "earliest"
     schemas.enable: "false"
-    topic2TableMap: "sjc.raw=sjc_raw"
-    # key.converter: "org.apache.kafka.connect.storage.StringConverter"
+    topic2TableMap: "vcb_exchange_rates=vcb_raw"
+    key.converter: "org.apache.kafka.connect.storage.StringConverter"
 
     # Converter config
     value.converter: "org.apache.kafka.connect.json.JsonConverter"

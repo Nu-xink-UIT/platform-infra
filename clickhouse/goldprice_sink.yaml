@@ -1,8 +1,7 @@
-# link: https://clickhouse.com/docs/integrations/kafka/clickhouse-kafka-connect-sink
 apiVersion: kafka.strimzi.io/v1
 kind: KafkaConnector
 metadata:
-  name: sjc-clickhouse-connector
+  name: goldprice-clickhouse-connector
   labels:
     strimzi.io/cluster: kafka-connect
 
@@ -10,7 +9,7 @@ spec:
   class: com.clickhouse.kafka.connect.ClickHouseSinkConnector
   tasksMax: 1
   config:
-    topics: "sjc.raw"
+    topics: "goldprice.raw"
     hostname: "chi-clickhouse-installation-goldprice-0-0.clickhouse.svc.cluster.local"
     port: "8123"
     username: "admin"
@@ -19,10 +18,11 @@ spec:
     ssl: "false"
     auto.offset.reset: "earliest"
     schemas.enable: "false"
-    topic2TableMap: "sjc.raw=sjc_raw"
+    topic2TableMap: "goldprice.raw=goldprice_raw"
     # key.converter: "org.apache.kafka.connect.storage.StringConverter"
 
     # Converter config
+    key.converter: "org.apache.kafka.connect.storage.StringConverter"
     value.converter: "org.apache.kafka.connect.json.JsonConverter"
     value.converter.schemas.enable: "false"
 
