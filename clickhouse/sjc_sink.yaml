@@ -37,6 +37,6 @@ spec:
     # can have some type forcing here (if needed)
 
     # error policy
-    errors.tolerance: "none"
+    errors.tolerance: "all"
     errors.log.enable: "true"
     errors.log.include.messages: "true"
